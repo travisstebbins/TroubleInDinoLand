@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
 	private bool moveThroughWallsGlitch = false;
 	private bool hasBeenFound = false;
 	private string glitchType = "trex";
+	private NetworkView networkView;
 	private GameObject tRex;
 		// for OnSerializeNetworkView
 		private float lastSynchronizationTime = 0f;
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		count = 0;
-		//networkView = GetComponent<NetworkView> ();
+		networkView = GetComponent<NetworkView> ();
 	}
 	
 	void FixedUpdate () {
@@ -58,21 +59,20 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (GetComponent<NetworkView> ().isMine) {			
+		if (GetComponent<NetworkView> ().isMine) {
 			if (moveThroughWallsGlitch) {
 				float move = Input.GetAxis ("Vertical");
 				rb.velocity = new Vector2 (rb.velocity.x, move * maxSpeed);
-			}
-			else if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
+			} else if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
 				if (!isGrounded && !doubleJump)
 					doubleJump = true;
 				rb.velocity = new Vector2 (rb.velocity.x, Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));			
 			}
 		} else {
-			SyncedMovement();
+			SyncedMovement ();
 		}
 	}
-
+	
 	private void SyncedMovement () {
 		syncTime += Time.deltaTime;
 		rb.position = Vector3.Lerp (syncStartPosition, syncEndPosition, syncTime / syncDelay);
@@ -105,6 +105,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	[RPC]
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.tag == "Pickup") {
 			other.gameObject.SetActive (false);
@@ -116,7 +117,8 @@ public class PlayerController : MonoBehaviour {
 		}
 		if (other.gameObject.CompareTag ("TRex")) {
 			Debug.Log ("TRex attack!");
-			Destroy (other.gameObject);
+			Network.RemoveRPCs (networkView.viewID);
+			Network.Destroy (tRex);
 		}
 	}
 
@@ -143,7 +145,8 @@ public class PlayerController : MonoBehaviour {
 		}
 		if (glitchType == "trex") {
 			glitchDuration = 5f;
-			Destroy (tRex.gameObject);
+			Network.RemoveRPCs (networkView.viewID);
+			Network.Destroy (tRex);
 		}
 		glitchActive = false;
 		Debug.Log ("glitch deactivated");
