@@ -16,6 +16,7 @@ public class NetworkManagerScript : MonoBehaviour {
 	private bool refreshing = false;
 	private bool hostPlayerSpawned = false;
 	private bool clientPlayerSpawned = false;
+	private bool networkSetupComplete = false;
 	private GameObject hostDinosaur;
 	private GameObject clientDinosaur;
 
@@ -69,7 +70,6 @@ public class NetworkManagerScript : MonoBehaviour {
 	}
 
 	public void JoinServer (HostData hostData) {
-		Debug.Log ("join server called");
 		Network.Connect (hostData);
 	}
 
@@ -77,9 +77,10 @@ public class NetworkManagerScript : MonoBehaviour {
 		if (spawnPointID == 0) {
 			hostDinosaur = (GameObject) Network.Instantiate (playerPrefab, hostSpawnPoint.position, Quaternion.identity, 0);
 		} else if (spawnPointID == 1) {
+			//networkSetupComplete = true;
 			clientDinosaur = (GameObject) Network.Instantiate (playerPrefab, clientSpawnPoint.position, Quaternion.identity, 0);
-			hostDinosaur.GetComponent<PlayerController>().otherDinosaur = clientDinosaur;
-			clientDinosaur.GetComponent<PlayerController>().otherDinosaur = hostDinosaur;
+			//hostDinosaur.GetComponent<PlayerController>().otherDinosaur = clientDinosaur;
+			//clientDinosaur.GetComponent<PlayerController>().otherDinosaur = hostDinosaur;
 		}
 	}
 
@@ -90,20 +91,20 @@ public class NetworkManagerScript : MonoBehaviour {
 				refreshing = false;
 			}
 		}
-		if (!hostPlayerSpawned && Network.isServer) {
-			if (hostSpawnPoint != null) {
-				SpawnPlayer (0);
+		if (!hostPlayerSpawned && Network.isServer && !networkSetupComplete) {
+			if (hostSpawnPoint != null) {				
 				hostPlayerSpawned = true;
+				SpawnPlayer (0);
 			}
 		}
-		if (!clientPlayerSpawned && Network.isClient) {
+		if (!clientPlayerSpawned && Network.isClient && !networkSetupComplete) {
 			if (clientSpawnPoint != null) {
-				SpawnPlayer (1);
 				clientPlayerSpawned = true;
+				SpawnPlayer (1);
 			}
 		}
 	}
-
+	
 	/*void OnGUI () {
 		if (!Network.isClient && !Network.isServer) {
 			if (GUI.Button (new Rect (100, 100, 250, 100), "Start Server"))

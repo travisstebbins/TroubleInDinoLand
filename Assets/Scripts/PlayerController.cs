@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 	private int count;
 	private bool glitchActive = false;
 	private bool moveThroughWallsGlitch = false;
+	private bool hasBeenFound = false;
 	private string glitchType = "trex";
 	private GameObject tRex;
 		// for OnSerializeNetworkView
@@ -126,6 +127,9 @@ public class PlayerController : MonoBehaviour {
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), true);
 		}
 		if (glitchType == "trex") {
+			Debug.Log ("TRex glitch triggered");
+			if (otherDinosaur != null)
+				Debug.Log ("Other Dinosaur exists");
 			glitchDuration = 10f;
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
 			tRex = (GameObject) Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x + 4 : otherPlayer.transform.position.x - 4, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
@@ -154,5 +158,13 @@ public class PlayerController : MonoBehaviour {
 
 	public bool isFacingRight () {
 		return facingRight;
+	}
+
+	public void setHasBeenFound (bool b) {
+		hasBeenFound = b;
+	}
+
+	public bool getHasBeenFound () {
+		return hasBeenFound;
 	}
 }
