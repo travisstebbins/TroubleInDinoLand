@@ -16,6 +16,8 @@ public class NetworkManagerScript : MonoBehaviour {
 	private bool refreshing = false;
 	private bool hostPlayerSpawned = false;
 	private bool clientPlayerSpawned = false;
+	private GameObject hostDinosaur;
+	private GameObject clientDinosaur;
 
 	// unity functions
 	
@@ -73,9 +75,11 @@ public class NetworkManagerScript : MonoBehaviour {
 
 	private void SpawnPlayer (int spawnPointID) {
 		if (spawnPointID == 0) {
-			Network.Instantiate (playerPrefab, hostSpawnPoint.position, Quaternion.identity, 0);
+			hostDinosaur = (GameObject) Network.Instantiate (playerPrefab, hostSpawnPoint.position, Quaternion.identity, 0);
 		} else if (spawnPointID == 1) {
-			Network.Instantiate (playerPrefab, clientSpawnPoint.position, Quaternion.identity, 0);
+			clientDinosaur = (GameObject) Network.Instantiate (playerPrefab, clientSpawnPoint.position, Quaternion.identity, 0);
+			hostDinosaur.GetComponent<PlayerController>().otherDinosaur = clientDinosaur;
+			clientDinosaur.GetComponent<PlayerController>().otherDinosaur = hostDinosaur;
 		}
 	}
 

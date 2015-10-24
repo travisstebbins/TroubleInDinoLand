@@ -9,16 +9,23 @@ public class PlayerController : MonoBehaviour {
 	public float jumpHeight = 10f;
 	public Transform groundCheck;
 	public float groundRadius = 0.2f;
+	public float glitchDuration = 5f;
 	public LayerMask groundLayerMask;
+	public GameObject tRexPrefab;	
+	public GameObject otherDinosaur; 
 	
 	// components
 	private Rigidbody2D rb;
-	//private NetworkView networkView;
 	
 	// private variables
 	private bool isGrounded = false;
 	private bool doubleJump = false;
 	private bool facingRight = false;
+	private int count;
+	private bool glitchActive = false;
+	private bool moveThroughWallsGlitch = false;
+	private string glitchType = "trex";
+	private GameObject tRex;
 		// for OnSerializeNetworkView
 		private float lastSynchronizationTime = 0f;
 		private float syncDelay = 0f;
@@ -28,6 +35,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
+		count = 0;
 		//networkView = GetComponent<NetworkView> ();
 	}
 	
@@ -49,8 +57,12 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (GetComponent<NetworkView> ().isMine) {
-			if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
+		if (GetComponent<NetworkView> ().isMine) {			
+			if (moveThroughWallsGlitch) {
+				float move = Input.GetAxis ("Vertical");
+				rb.velocity = new Vector2 (rb.velocity.x, move * maxSpeed);
+			}
+			else if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
 				if (!isGrounded && !doubleJump)
 					doubleJump = true;
 				rb.velocity = new Vector2 (rb.velocity.x, Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));			
@@ -92,10 +104,55 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void OnTriggerEnter2D (Collider2D other) {
+		if (other.gameObject.tag == "Pickup") {
+			other.gameObject.SetActive (false);
+		}
+		if (other.gameObject.CompareTag ("GlitchEgg")) {
+			other.gameObject.SetActive (false);
+			glitchType = "trex";
+			StartCoroutine(Glitch ());
+		}
+		if (other.gameObject.CompareTag ("TRex")) {
+			Debug.Log ("TRex attack!");
+			Destroy (other.gameObject);
+		}
+	}
+
+	IEnumerator Glitch () {
+		glitchActive = true;
+		if (glitchType == "moveThroughWalls") {
+			moveThroughWallsGlitch = true;
+			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), true);
+		}
+		if (glitchType == "trex") {
+			glitchDuration = 10f;
+			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
+			tRex = (GameObject) Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x + 4 : otherPlayer.transform.position.x - 4, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
+			tRex.GetComponent<TRexController>().target = otherPlayer.transform;
+		}
+		Debug.Log ("glitch active");
+		yield return new WaitForSeconds (glitchDuration);
+		if (glitchType == "moveThroughWalls") {			
+			moveThroughWallsGlitch = false;
+			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), false);
+		}
+		if (glitchType == "trex") {
+			glitchDuration = 5f;
+			Destroy (tRex.gameObject);
+		}
+		glitchActive = false;
+		Debug.Log ("glitch deactivated");
+	}
+
 	void Flip () {
 		Vector2 scale = transform.localScale;
 		scale.x *= -1;
 		transform.localScale = scale;
 		facingRight = !facingRight;
+	}
+
+	public bool isFacingRight () {
+		return facingRight;
 	}
 }
