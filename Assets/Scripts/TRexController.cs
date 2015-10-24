@@ -6,6 +6,7 @@ public class TRexController : MonoBehaviour {
 	// public variables
 	public Transform target;
 	public float speed;
+	public static float spawnDistance = 8f;
 
 	// components
 	Rigidbody2D rb;

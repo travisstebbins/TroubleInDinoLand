@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour {
 				Debug.Log ("Other Dinosaur exists");
 			glitchDuration = 10f;
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
-			tRex = (GameObject) Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x + 4 : otherPlayer.transform.position.x - 4, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
+			tRex = (GameObject) Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
 			tRex.GetComponent<TRexController>().target = otherPlayer.transform;
 		}
 		Debug.Log ("glitch active");
