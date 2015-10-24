@@ -4,34 +4,61 @@ using System.Collections;
 public class NetworkManagerScript : MonoBehaviour {
 
 	// public variables
+	public static NetworkManagerScript instance = null;
 	public GameObject playerPrefab;
 	public Transform hostSpawnPoint;
 	public Transform clientSpawnPoint;
 
 	// private variables
 	private const string typeName = "Chillennium.NetflixAndChillennium.MultiplayerTest";
-	private const string gameName = "MultiplayerTestGame";
+	private string gameName = "MultiplayerTestGame";
 	private HostData[] hostList;
+	private bool refreshing = false;
+	private bool hostPlayerSpawned = false;
+	private bool clientPlayerSpawned = false;
+
+	// unity functions
 	
-	void Start () {
-	
+	void Awake () {
+		DontDestroyOnLoad (this);
 	}
 
-	void Update () {
-	
+	void Start () {
+		if (instance == null)
+			instance = this;
+		else if (instance != this)
+			Destroy (gameObject);
 	}
+
+	// public functions
+
+	public void CreateGame (string newGameName) {
+		if (!Network.isClient && !Network.isServer) {
+			gameName = newGameName;
+			StartServer ();
+		}
+	}
+
+	public HostData[] getHostList () {
+		//RefreshHostList ();
+		return hostList;
+	}
+
+	// server initialization
 
 	private void StartServer () {
 		Network.InitializeServer (2, 25000, !Network.HavePublicAddress ());
 		MasterServer.RegisterHost (typeName, gameName);
 	}
 
-	void OnServerInitialized () {
-		SpawnPlayer (0);
-	}
+	//void OnServerInitialized () {
+	//}
+
+	// host list refreshing/joining server
 
 	private void RefreshHostList () {
 		MasterServer.RequestHostList (typeName);
+		refreshing = true;
 	}
 
 	void OnMasterServerEvent (MasterServerEvent msEvent) {
@@ -39,12 +66,9 @@ public class NetworkManagerScript : MonoBehaviour {
 			hostList = MasterServer.PollHostList ();
 	}
 
-	private void JoinServer (HostData hostData) {
+	public void JoinServer (HostData hostData) {
+		Debug.Log ("join server called");
 		Network.Connect (hostData);
-	}
-
-	void OnConnectedToServer () {
-		SpawnPlayer (1);
 	}
 
 	private void SpawnPlayer (int spawnPointID) {
@@ -55,7 +79,28 @@ public class NetworkManagerScript : MonoBehaviour {
 		}
 	}
 
-	void OnGUI () {
+	void Update () {
+		RefreshHostList ();
+		if (refreshing) {
+			if (MasterServer.PollHostList ().Length > 0) {
+				refreshing = false;
+			}
+		}
+		if (!hostPlayerSpawned && Network.isServer) {
+			if (hostSpawnPoint != null) {
+				SpawnPlayer (0);
+				hostPlayerSpawned = true;
+			}
+		}
+		if (!clientPlayerSpawned && Network.isClient) {
+			if (clientSpawnPoint != null) {
+				SpawnPlayer (1);
+				clientPlayerSpawned = true;
+			}
+		}
+	}
+
+	/*void OnGUI () {
 		if (!Network.isClient && !Network.isServer) {
 			if (GUI.Button (new Rect (100, 100, 250, 100), "Start Server"))
 				StartServer ();
@@ -68,6 +113,6 @@ public class NetworkManagerScript : MonoBehaviour {
 				}
 			}
 		}
-	}
+	}*/
 
 }

@@ -67,23 +67,28 @@ public class PlayerController : MonoBehaviour {
 
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
 		Vector3 syncPosition = Vector3.zero;
-		Vector3 syncVelocity = Vector3.zero;
+		Vector3 syncScale = Vector3.zero;
+		//Vector3 syncVelocity = Vector3.zero;
 		if (stream.isWriting) {
 			syncPosition = rb.position;
 			stream.Serialize (ref syncPosition);
 
-			syncVelocity = rb.velocity;
-			stream.Serialize (ref syncVelocity);
+			syncScale = transform.localScale;
+			stream.Serialize (ref syncScale);
+			//syncVelocity = rb.velocity;
+			//stream.Serialize (ref syncVelocity);
 		} else {
 			stream.Serialize (ref syncPosition);
-			stream.Serialize (ref syncVelocity);
+			stream.Serialize (ref syncScale);
+			//stream.Serialize (ref syncVelocity);
 
 			syncTime = 0f;
 			syncDelay = Time.time - lastSynchronizationTime;
 			lastSynchronizationTime = Time.time;
 
-			syncEndPosition = syncPosition + syncVelocity * syncDelay;
 			syncStartPosition = rb.position;
+			syncEndPosition = syncPosition;
+			transform.localScale = syncScale;
 		}
 	}
 
