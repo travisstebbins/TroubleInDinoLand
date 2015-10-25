@@ -1,12 +1,13 @@
 fileFormatVersion: 2
-guid: 6e75329ccc4a4a74ab99a9e4dd75c1ea
-timeCreated: 1445736874
+guid: 438aaaab1d9ce97459184f1368c1682d
+timeCreated: 1445741529
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: GlitchEgg_yellow_0
-    21300002: GlitchEgg_yellow_1
-    21300004: GlitchEgg_yellow_2
+    21300000: GlitchEgg_0
+    21300002: GlitchEgg_1
+    21300004: GlitchEgg_2
+    21300006: GlitchEgg_3
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -29,7 +30,7 @@ TextureImporter:
   cubemapConvolutionSteps: 8
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
-  textureFormat: -3
+  textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
@@ -40,7 +41,6 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
@@ -53,33 +53,43 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: GlitchEgg_yellow_0
+    - name: GlitchEgg_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 6
-        width: 170
-        height: 255
+        y: 38
+        width: 125
+        height: 184
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: GlitchEgg_yellow_1
+    - name: GlitchEgg_1
       rect:
         serializedVersion: 2
-        x: 174
-        y: 6
-        width: 189
-        height: 255
+        x: 135
+        y: 36
+        width: 150
+        height: 193
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: GlitchEgg_yellow_2
+    - name: GlitchEgg_2
       rect:
         serializedVersion: 2
-        x: 380
-        y: 6
-        width: 187
-        height: 255
+        x: 296
+        y: 40
+        width: 126
+        height: 184
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: GlitchEgg_3
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 36
+        width: 152
+        height: 193
       alignment: 0
       pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}

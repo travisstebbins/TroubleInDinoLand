@@ -30,10 +30,6 @@ public class PlayerController : MonoBehaviour {
 	private Quaternion newRotation;
 	private bool rotating = false;
 	private bool controlsFlipped = false;
-
-	// glitch types: moveThroughWalls, trex, cameraRotate, flipGravity, flipControls
-	private string glitchType = "moveThroughWalls";
-	private NetworkView networkView;
 	private GameObject tRex;
 		// for OnSerializeNetworkView
 		private float lastSynchronizationTime = 0f;
@@ -45,7 +41,6 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		count = 0;
-		networkView = GetComponent<NetworkView> ();
 	}
 	
 	void FixedUpdate () {
@@ -84,7 +79,8 @@ public class PlayerController : MonoBehaviour {
 			if (moveThroughWallsGlitch) {
 				float move = Input.GetAxis ("Vertical");
 				rb.velocity = new Vector2 (rb.velocity.x, move * maxSpeed);
-			} else if (!controlsFlipped) {
+			}
+			if (!controlsFlipped) {
 				if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
 					if (!isGrounded && !doubleJump)
 						doubleJump = true;
@@ -162,52 +158,53 @@ public class PlayerController : MonoBehaviour {
 		if (other.gameObject.CompareTag ("GlitchEgg")) {
 			Debug.Log ("glitch egg triggered");
 			other.gameObject.SetActive (false);
-			StartCoroutine(Glitch ());
+			StartCoroutine(Glitch (other.gameObject.GetComponent<GlitchEggController>().glitchID));
 		}
 		if (other.gameObject.CompareTag ("TRex")) {
 			Debug.Log ("TRex attack!");
-			Network.RemoveRPCs (networkView.viewID);
+			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
 			Network.Destroy (tRex);
 		}
 	}
 
-	IEnumerator Glitch () {
+	// glitchIDs: 0 = moveThroughWalls, 1 = trex, 2 = cameraRotate, 3 = flipGravity, 4 = flipControls
+	IEnumerator Glitch (int glitchID) {
 		glitchActive = true;
-		if (glitchType == "moveThroughWalls") {
+		if (glitchID == 0) {
 			moveThroughWallsGlitch = true;
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), true);
-		} else if (glitchType == "trex") {
+		} else if (glitchID == 1) {
 			Debug.Log ("TRex glitch triggered");
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
 			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
 			tRex.GetComponent<TRexController> ().target = otherPlayer.transform;
-		} else if (glitchType == "cameraRotate") {
+		} else if (glitchID == 2) {
 			Debug.Log ("glitchType == cameraRotate");
 			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
-		} else if (glitchType == "flipGravity") {
+		} else if (glitchID == 3) {
 			gravityFlipped = true;
 			rb.gravityScale = -1;
 			Rotate ();
-		} else if (glitchType == "flipControls") {
+		} else if (glitchID == 4) {
 			controlsFlipped = true;
 		}
 		Debug.Log ("glitch active");
 		yield return new WaitForSeconds (glitchDuration);
-		if (glitchType == "moveThroughWalls") {			
+		if (glitchID == 0) {			
 			moveThroughWallsGlitch = false;
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), false);
-		} else if (glitchType == "trex") {
-			Network.RemoveRPCs (networkView.viewID);
+		} else if (glitchID == 1) {
+			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
 			Network.Destroy (tRex);
-		} else if (glitchType == "cameraRotate") {
+		} else if (glitchID == 2) {
 			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
-		} else if (glitchType == "flipGravity") {
+		} else if (glitchID == 3) {
 			gravityFlipped = false;
 			rb.gravityScale = 1;
 			Rotate ();
-		} else if (glitchType == "flipControls") {
+		} else if (glitchID == 4) {
 			controlsFlipped = false;
 		}
 		glitchActive = false;
