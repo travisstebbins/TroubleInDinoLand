@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject tRexPrefab;
 	public GameObject otherDinosaur;
 	public Camera camera;
-	public AudioClip eatSound;
+	public AudioClip[] eatSounds;
 	
 	// components
 	private Rigidbody2D rb;
@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour {
 	
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.tag == "Leaf") {
-			source.PlayOneShot (eatSound);
+			PlayEatSound ();
 			Debug.Log ("leaf triggered");
 			leafCount++;
 			gameManager.SetScore();
@@ -262,7 +262,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void PlayEatSound () {
-		source.PlayOneShot (eatSound);
+		int i = Random.Range (0, eatSounds.Length);
+		source.PlayOneShot (eatSounds[i]);
 	}
 	
 	// glitchIDs: 0 = moveThroughWalls, 1 = trex, 2 = cameraRotate, 3 = flipGravity, 4 = flipControls
