@@ -16,10 +16,12 @@ public class PlayerController : MonoBehaviour {
 	public GameObject tRexPrefab;
 	public GameObject otherDinosaur;
 	public Camera camera;
+	public AudioClip eatSound;
 	
 	// components
 	private Rigidbody2D rb;
 	private Animator anim;
+	private AudioSource source;
 	
 	// private variables
 	private GameManager gameManager;
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
+		source = GetComponent<AudioSource> ();
 		leafCount = 0;
 	}
 	
@@ -238,8 +241,8 @@ public class PlayerController : MonoBehaviour {
 	
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.tag == "Leaf") {
+			source.PlayOneShot (eatSound);
 			Debug.Log ("leaf triggered");
-			//other.gameObject.SetActive (false);
 			leafCount++;
 			gameManager.SetScore();
 		}
@@ -256,6 +259,10 @@ public class PlayerController : MonoBehaviour {
 			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
 			Network.Destroy (tRex);
 		}
+	}
+
+	public void PlayEatSound () {
+		source.PlayOneShot (eatSound);
 	}
 	
 	// glitchIDs: 0 = moveThroughWalls, 1 = trex, 2 = cameraRotate, 3 = flipGravity, 4 = flipControls
@@ -376,6 +383,10 @@ public class PlayerController : MonoBehaviour {
 	
 	public int getLeafCount () {
 		return leafCount;
+	}
+
+	public void AddLeaf () {
+		leafCount++;
 	}
 
 	public Animator getAnimator () {
