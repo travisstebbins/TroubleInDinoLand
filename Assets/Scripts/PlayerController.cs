@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour {
 	private bool glitchActive = false;
 	private bool moveThroughWallsGlitch = false;
 	private bool hasBeenFound = false;
-	private string glitchType = "trex";
+	private bool gravityFlipped = false;
+	private string glitchType = "flipGravity";
 	private NetworkView networkView;
 	private GameObject tRex;
 		// for OnSerializeNetworkView
@@ -105,14 +106,13 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	[RPC]
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.tag == "Pickup") {
 			other.gameObject.SetActive (false);
 		}
 		if (other.gameObject.CompareTag ("GlitchEgg")) {
+			Debug.Log ("glitch egg triggered");
 			other.gameObject.SetActive (false);
-			glitchType = "trex";
 			StartCoroutine(Glitch ());
 		}
 		if (other.gameObject.CompareTag ("TRex")) {
@@ -127,26 +127,35 @@ public class PlayerController : MonoBehaviour {
 		if (glitchType == "moveThroughWalls") {
 			moveThroughWallsGlitch = true;
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), true);
-		}
-		if (glitchType == "trex") {
+		} else if (glitchType == "trex") {
 			Debug.Log ("TRex glitch triggered");
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
 			glitchDuration = 10f;
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
-			tRex = (GameObject) Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
-			tRex.GetComponent<TRexController>().target = otherPlayer.transform;
+			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
+			tRex.GetComponent<TRexController> ().target = otherPlayer.transform;
+		} else if (glitchType == "cameraRotate") {
+			Debug.Log ("glitchType == cameraRotate");
+			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
+		} else if (glitchType == "flipGravity") {
+			gravityFlipped = true;
+			rb.gravityScale = -1;
 		}
 		Debug.Log ("glitch active");
 		yield return new WaitForSeconds (glitchDuration);
 		if (glitchType == "moveThroughWalls") {			
 			moveThroughWallsGlitch = false;
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), false);
-		}
-		if (glitchType == "trex") {
+		} else if (glitchType == "trex") {
 			glitchDuration = 5f;
 			Network.RemoveRPCs (networkView.viewID);
 			Network.Destroy (tRex);
+		} else if (glitchType == "cameraRotate") {
+			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
+		} else if (glitchType == "flipGravity") {
+			gravityFlipped = false;
+			rb.gravityScale = 1;
 		}
 		glitchActive = false;
 		Debug.Log ("glitch deactivated");
