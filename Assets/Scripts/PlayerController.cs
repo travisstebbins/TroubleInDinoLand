@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody2D rb;
 	
 	// private variables
+	private GameManager gameManager;
 	private bool isGrounded = false;
 	private bool doubleJump = false;
 	private bool facingRight = false;
@@ -37,6 +38,14 @@ public class PlayerController : MonoBehaviour {
 		private float syncTime = 0f;
 		private Vector3 syncStartPosition = Vector3.zero;
 		private Vector3 syncEndPosition = Vector3.zero;
+
+	void Awake () {
+		gameManager = GameManager.instance;
+	}
+
+	void OnLevelWasLoaded () {
+		gameManager = GameManager.instance;
+	}
 
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
@@ -99,7 +108,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void Rotate () {
-		Debug.Log ("Rotate called");
+		Debug.Log ("player Rotate called");
 		newRotation = !gravityFlipped ? Quaternion.Euler (new Vector3 (0, 0, 0)) : Quaternion.Euler (new Vector3 (0, 0, 180));
 		rotating = true;
 	}
@@ -188,6 +197,7 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log ("leaf triggered");
 			//other.gameObject.SetActive (false);
 			leafCount++;
+			gameManager.SetScore();
 		}
 		if (other.gameObject.CompareTag ("GlitchEgg")) {
 			Debug.Log ("glitch egg triggered");
@@ -274,5 +284,9 @@ public class PlayerController : MonoBehaviour {
 
 	public bool getHasBeenFound () {
 		return hasBeenFound;
+	}
+
+	public int getLeafCount () {
+		return leafCount;
 	}
 }

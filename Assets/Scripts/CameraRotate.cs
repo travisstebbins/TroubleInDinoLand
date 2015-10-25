@@ -17,7 +17,6 @@ public class CameraRotate : MonoBehaviour {
 	}
 
 	public void Rotate () {
-		Debug.Log ("Rotate called");
 		newRotation = flipped ? Quaternion.Euler (new Vector3 (0, 0, 0)) : Quaternion.Euler (new Vector3 (0, 0, 180));
 		rotating = true;
 		flipped = !flipped;
