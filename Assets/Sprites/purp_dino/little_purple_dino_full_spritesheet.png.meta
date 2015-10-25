@@ -1,0 +1,232 @@
+fileFormatVersion: 2
+guid: a905d4211c31bce4faaae5f898d9862d
+timeCreated: 1445796191
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: little_purple_dino_full_spritesheet_0
+    21300002: little_purple_dino_full_spritesheet_1
+    21300004: little_purple_dino_full_spritesheet_2
+    21300006: little_purple_dino_full_spritesheet_3
+    21300008: little_purple_dino_full_spritesheet_4
+    21300010: little_purple_dino_full_spritesheet_5
+    21300012: little_purple_dino_full_spritesheet_6
+    21300014: little_purple_dino_full_spritesheet_7
+    21300016: little_purple_dino_full_spritesheet_8
+    21300018: little_purple_dino_full_spritesheet_9
+    21300020: little_purple_dino_full_spritesheet_10
+    21300022: little_purple_dino_full_spritesheet_11
+    21300024: little_purple_dino_full_spritesheet_12
+    21300026: little_purple_dino_full_spritesheet_13
+    21300028: little_purple_dino_full_spritesheet_14
+    21300030: little_purple_dino_full_spritesheet_15
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 4096
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: little_purple_dino_full_spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 743
+        width: 247
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 744
+        width: 254
+        height: 290
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 716
+        y: 744
+        width: 260
+        height: 289
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1070
+        y: 747
+        width: 261
+        height: 286
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 1424
+        y: 748
+        width: 256
+        height: 286
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 747
+        width: 258
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 2122
+        y: 737
+        width: 234
+        height: 297
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 413
+        width: 247
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 406
+        width: 235
+        height: 305
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 710
+        y: 418
+        width: 248
+        height: 294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 406
+        width: 235
+        height: 305
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 413
+        width: 247
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 66
+        width: 247
+        height: 294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 67
+        width: 291
+        height: 289
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 682
+        y: 67
+        width: 267
+        height: 195
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: little_purple_dino_full_spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 993
+        y: 67
+        width: 291
+        height: 296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
