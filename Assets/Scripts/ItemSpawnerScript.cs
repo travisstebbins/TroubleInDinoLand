@@ -27,7 +27,7 @@ public class ItemSpawnerScript : MonoBehaviour {
 
 	void SpawnItem () {
 		int i = Random.Range (0, 10);
-		if (i <= 6) {
+		if (i <= 5) {
 			Debug.Log ("leaf created");
 			item = (GameObject) Network.Instantiate (leafPrefab, transform.position, Quaternion.identity, 0);
 		} else {

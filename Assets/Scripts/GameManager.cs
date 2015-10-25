@@ -111,9 +111,9 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 0;		
 		endGame = true;
 		if (player1Score > player2Score)
-			endText.text = "Player 1 Wins!\nPress Enter to Quit";
+			endText.text = "Player 1\nis the baddest glitch around!\nPress Enter to Quit";
 		else if (player2Score > player1Score)
-			endText.text = "Player 2 Wins!\nPress Enter to Quit";
+			endText.text = "Player 2\nis the baddest glitch around!\nPress Enter to Quit";
 		else
 			endText.text = "It's a Tie!\nPress Enter to Quit";
 		Network.Disconnect ();
