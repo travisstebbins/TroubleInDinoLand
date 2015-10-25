@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 	private bool isGrounded = false;
 	private bool doubleJump = false;
 	private bool facingRight = false;
-	private int count;
+	private int leafCount;
 	private bool glitchActive = false;
 	private bool moveThroughWallsGlitch = false;
 	private bool hasBeenFound = false;
@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour {
 
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
-		count = 0;
+		leafCount = 0;
 	}
 	
 	void FixedUpdate () {
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour {
 				if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.DownArrow)) {
 					if (!isGrounded && !doubleJump)
 						doubleJump = true;
-					rb.velocity = new Vector2 (rb.velocity.x, Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));
+					rb.velocity = new Vector2 (rb.velocity.x, !gravityFlipped ? Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y) : -Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));
 				}
 			}
 		} else {
@@ -152,8 +152,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D (Collider2D other) {
-		if (other.gameObject.tag == "Pickup") {
+		if (other.gameObject.tag == "Leaf") {
 			other.gameObject.SetActive (false);
+			leafCount++;
 		}
 		if (other.gameObject.CompareTag ("GlitchEgg")) {
 			Debug.Log ("glitch egg triggered");
@@ -178,17 +179,23 @@ public class PlayerController : MonoBehaviour {
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
-			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
+			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (!otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
 			tRex.GetComponent<TRexController> ().target = otherPlayer.transform;
 		} else if (glitchID == 2) {
 			Debug.Log ("glitchType == cameraRotate");
 			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
 		} else if (glitchID == 3) {
-			gravityFlipped = true;
-			rb.gravityScale = -1;
-			Rotate ();
+			if (otherDinosaur != null)
+				Debug.Log ("Other Dinosaur exists");
+			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
+			otherPlayer.gravityFlipped = true;
+			otherPlayer.GetComponent<Rigidbody2D>().gravityScale = -1;
+			otherPlayer.Rotate ();
 		} else if (glitchID == 4) {
-			controlsFlipped = true;
+			if (otherDinosaur != null)
+				Debug.Log ("Other Dinosaur esists");
+			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController>();
+			otherPlayer.controlsFlipped = true;
 		}
 		Debug.Log ("glitch active");
 		yield return new WaitForSeconds (glitchDuration);
@@ -201,11 +208,17 @@ public class PlayerController : MonoBehaviour {
 		} else if (glitchID == 2) {
 			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
 		} else if (glitchID == 3) {
-			gravityFlipped = false;
-			rb.gravityScale = 1;
-			Rotate ();
+			if (otherDinosaur != null)
+				Debug.Log ("Other Dinosaur exists");
+			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
+			otherPlayer.gravityFlipped = false;
+			otherPlayer.GetComponent<Rigidbody2D>().gravityScale = 1;
+			otherPlayer.Rotate ();
 		} else if (glitchID == 4) {
-			controlsFlipped = false;
+			if (otherDinosaur != null)
+				Debug.Log ("Other Dinosaur esists");
+			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController>();
+			otherPlayer.controlsFlipped = false;
 		}
 		glitchActive = false;
 		Debug.Log ("glitch deactivated");
