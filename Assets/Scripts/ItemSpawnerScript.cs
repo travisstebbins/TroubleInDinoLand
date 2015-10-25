@@ -33,6 +33,7 @@ public class ItemSpawnerScript : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.CompareTag ("HostPlayer") || other.gameObject.CompareTag ("ClientPlayer")) {
 			Network.Destroy (item.GetComponent<NetworkView>().gameObject);
+			bColl = null;
 			StartCoroutine(SpawnItemCoroutine());
 		}
 	}

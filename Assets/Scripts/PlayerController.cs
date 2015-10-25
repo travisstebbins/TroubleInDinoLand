@@ -11,10 +11,11 @@ public class PlayerController : MonoBehaviour {
 	public float groundRadius = 0.2f;
 	public float glitchDuration = 10f;
 	public float rotateSpeed = 7f;
-	public int tRexAttack; = 5;
+	public int tRexAttack = 5;
 	public LayerMask groundLayerMask;
 	public GameObject tRexPrefab;
 	public GameObject otherDinosaur;
+	public Camera camera;
 	
 	// components
 	private Rigidbody2D rb;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour {
 	private float syncAnimationSpeed = 0;
 	private bool syncAnimationJump = false;
 	public bool syncAnimationIsGlitched = false;
+	private bool syncOtherAnimationIsGlitched;
 	
 	void Awake () {
 		gameManager = GameManager.instance;
@@ -115,7 +117,8 @@ public class PlayerController : MonoBehaviour {
 					syncAnimationJump = true;
 				}
 			}
-			GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ().transform.position = new Vector3 (transform.position.x, transform.position.y, -10);
+			camera = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera> ();
+			camera.transform.position = new Vector3 (transform.position.x, transform.position.y, -10);
 		} else {
 			SyncedMovement ();
 		}
@@ -184,10 +187,11 @@ public class PlayerController : MonoBehaviour {
 			
 			syncGlitchActive = glitchActive;
 			stream.Serialize (ref syncGlitchActive);
-			
+
 			stream.Serialize (ref syncAnimationSpeed);
 			stream.Serialize (ref syncAnimationJump);
 			stream.Serialize (ref syncAnimationIsGlitched);
+			stream.Serialize (ref syncOtherAnimationIsGlitched);
 			
 			//syncVelocity = rb.velocity;
 			//stream.Serialize (ref syncVelocity);
@@ -205,6 +209,7 @@ public class PlayerController : MonoBehaviour {
 			stream.Serialize (ref syncAnimationSpeed);
 			stream.Serialize (ref syncAnimationJump);
 			stream.Serialize (ref syncAnimationIsGlitched);
+			stream.Serialize (ref syncOtherAnimationIsGlitched);
 			//stream.Serialize (ref syncVelocity);
 			
 			syncTime = 0f;
@@ -224,8 +229,10 @@ public class PlayerController : MonoBehaviour {
 			controlsFlipped = syncControlsFlipped;
 			glitchActive = syncGlitchActive;
 			anim.SetFloat ("speed", Mathf.Abs (syncAnimationSpeed));
-			anim.SetTrigger ("jump");
+			if (syncAnimationJump)
+				anim.SetTrigger ("jump");
 			anim.SetBool ("isGlitched", syncAnimationIsGlitched);
+			otherDinosaur.GetComponent<PlayerController>().getAnimator().SetBool ("isGlitched", syncOtherAnimationIsGlitched);
 		}
 	}
 	
@@ -244,6 +251,8 @@ public class PlayerController : MonoBehaviour {
 		if (other.gameObject.CompareTag ("TRex")) {
 			Debug.Log ("TRex attack!");
 			leafCount -= tRexAttack;
+			if (leafCount < 0)
+				leafCount = 0;
 			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
 			Network.Destroy (tRex);
 		}
@@ -265,6 +274,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.glitchActive = true;
 			otherPlayer.getAnimator().SetBool ("isGlitched", true);
 			otherPlayer.syncAnimationIsGlitched = true;
+			syncOtherAnimationIsGlitched = true;
 			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (!otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
 			tRex.GetComponent<TRexController> ().target = otherPlayer.transform;
 		} else if (glitchID == 2) {
@@ -274,8 +284,8 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.glitchActive = true;
 			otherPlayer.getAnimator().SetBool ("isGlitched", true);
 			otherPlayer.syncAnimationIsGlitched = true;
-			CameraRotate> ().Rotate ();
-			otherDinosaur.GetComponentInChildren<CameraRotate>().Rotate ();
+			syncOtherAnimationIsGlitched = true;
+			otherDinosaur.GetComponent<PlayerController>().camera.GetComponent<CameraRotate>().Rotate ();
 		} else if (glitchID == 3) {
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
@@ -285,6 +295,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.syncAnimationIsGlitched = true;
 			otherPlayer.gravityFlipped = true;
 			otherPlayer.GetComponent<Rigidbody2D>().gravityScale = -1;
+			syncOtherAnimationIsGlitched = true;
 			otherPlayer.Rotate ();
 		} else if (glitchID == 4) {
 			if (otherDinosaur != null)
@@ -294,6 +305,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.getAnimator().SetBool ("isGlitched", true);
 			otherPlayer.syncAnimationIsGlitched = true;
 			otherPlayer.controlsFlipped = true;
+			syncOtherAnimationIsGlitched = true;
 		}
 		Debug.Log ("glitch active");
 		yield return new WaitForSeconds (glitchDuration);
@@ -308,6 +320,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.glitchActive = false;
 			otherPlayer.getAnimator().SetBool ("isGlitched", false);
 			otherPlayer.syncAnimationIsGlitched = false;
+			syncOtherAnimationIsGlitched = false;
 			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
 			Network.Destroy (tRex);
 		} else if (glitchID == 2) {
@@ -316,7 +329,8 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.glitchActive = false;
 			otherPlayer.getAnimator().SetBool ("isGlitched", false);
 			otherPlayer.syncAnimationIsGlitched = false;
-			otherDinosaur.GetComponentInChildren<CameraRotate>().Rotate ();
+			syncOtherAnimationIsGlitched = false;
+			otherDinosaur.GetComponent<PlayerController>().camera.GetComponent<CameraRotate>().Rotate ();
 		} else if (glitchID == 3) {
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
@@ -326,6 +340,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.syncAnimationIsGlitched = false;
 			otherPlayer.gravityFlipped = false;
 			otherPlayer.GetComponent<Rigidbody2D>().gravityScale = 1;
+			syncOtherAnimationIsGlitched = false;
 			otherPlayer.Rotate ();
 		} else if (glitchID == 4) {
 			if (otherDinosaur != null)
@@ -334,6 +349,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.glitchActive = false;
 			otherPlayer.getAnimator().SetBool ("isGlitched", false);
 			otherPlayer.syncAnimationIsGlitched = false;
+			syncOtherAnimationIsGlitched = false;
 			otherPlayer.controlsFlipped = false;
 		}
 		Debug.Log ("glitch deactivated");
