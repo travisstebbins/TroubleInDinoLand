@@ -153,12 +153,13 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D other) {
 		if (other.gameObject.tag == "Leaf") {
-			other.gameObject.SetActive (false);
+			Debug.Log ("leaf triggered");
+			//other.gameObject.SetActive (false);
 			leafCount++;
 		}
 		if (other.gameObject.CompareTag ("GlitchEgg")) {
 			Debug.Log ("glitch egg triggered");
-			other.gameObject.SetActive (false);
+			//other.gameObject.SetActive (false);
 			StartCoroutine(Glitch (other.gameObject.GetComponent<GlitchEggController>().glitchID));
 		}
 		if (other.gameObject.CompareTag ("TRex")) {

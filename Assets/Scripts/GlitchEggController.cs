@@ -18,4 +18,15 @@ public class GlitchEggController : MonoBehaviour {
 			GetComponent<SpriteRenderer> ().sprite = pinkSprites[Random.Range (0, pinkSprites.Length)];
 	}
 
+	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
+		int syncID = 0;
+		if (stream.isWriting) {
+			syncID = glitchID;
+			stream.Serialize (ref syncID);
+		} else {
+			stream.Serialize (ref syncID);			
+			glitchID = syncID;
+		}
+	}
+
 }
