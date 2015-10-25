@@ -1,0 +1,122 @@
+fileFormatVersion: 2
+guid: 87d3e83d0e9a8194884a59eed1d8fa4f
+timeCreated: 1445747758
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_0
+    21300002: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_1
+    21300004: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_2
+    21300006: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_3
+    21300008: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_4
+    21300010: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_5
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 4096
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 550
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_0
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 312
+        width: 1415
+        height: 1673
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_1
+      rect:
+        serializedVersion: 2
+        x: 2234
+        y: 319
+        width: 1335
+        height: 1741
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_2
+      rect:
+        serializedVersion: 2
+        x: 4095
+        y: 374
+        width: 1417
+        height: 1681
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_3
+      rect:
+        serializedVersion: 2
+        x: 6035
+        y: 349
+        width: 1336
+        height: 1739
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_4
+      rect:
+        serializedVersion: 2
+        x: 7896
+        y: 340
+        width: 1411
+        height: 1673
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: BlueDinoJump_SpriteSheet(SIZEIMPROVED)_5
+      rect:
+        serializedVersion: 2
+        x: 4692
+        y: 333
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

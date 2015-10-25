@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour {
 			endText.text = "Player 2 Wins!\nPress Enter to Quit";
 		else
 			endText.text = "It's a Tie!\nPress Enter to Quit";
+		Network.Disconnect ();
 	}
 
 }

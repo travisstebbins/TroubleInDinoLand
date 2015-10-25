@@ -25,6 +25,11 @@ public class NetworkManagerScript : MonoBehaviour {
 	
 	void Awake () {
 		DontDestroyOnLoad (this);
+		MasterServer.ipAddress = "192.168.5.2";
+		/*MasterServer.ipAddress = "your ip";
+		MasterServer.port = port masterserver;
+		Network.natFacilitatorIP = "your ip";
+		Network.natFacilitatorPort = port facilitator;*/
 	}
 
 	void Start () {

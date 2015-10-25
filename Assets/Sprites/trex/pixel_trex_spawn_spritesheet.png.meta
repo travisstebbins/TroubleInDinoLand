@@ -1,0 +1,154 @@
+fileFormatVersion: 2
+guid: 9a33a15ceae955c4d83f85e7423e1113
+timeCreated: 1445752729
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: pixel_trex_spawn_spritesheet_0
+    21300002: pixel_trex_spawn_spritesheet_1
+    21300004: pixel_trex_spawn_spritesheet_2
+    21300006: pixel_trex_spawn_spritesheet_3
+    21300008: pixel_trex_spawn_spritesheet_4
+    21300010: pixel_trex_spawn_spritesheet_5
+    21300012: pixel_trex_spawn_spritesheet_6
+    21300014: pixel_trex_spawn_spritesheet_7
+    21300016: pixel_trex_spawn_spritesheet_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 200
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: pixel_trex_spawn_spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 219
+        y: 2205
+        width: 1117
+        height: 405
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 1680
+        y: 2198
+        width: 1140
+        height: 456
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 3120
+        y: 2057
+        width: 1269
+        height: 641
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 1102
+        width: 1350
+        height: 810
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 1508
+        y: 1088
+        width: 1447
+        height: 847
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 3029
+        y: 1085
+        width: 1431
+        height: 813
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 110
+        width: 1467
+        height: 837
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 1508
+        y: 127
+        width: 1484
+        height: 813
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: pixel_trex_spawn_spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 3012
+        y: 110
+        width: 1482
+        height: 827
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
