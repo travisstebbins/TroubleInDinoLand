@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour {
 	public float jumpHeight = 10f;
 	public Transform groundCheck;
 	public float groundRadius = 0.2f;
-	public float glitchDuration = 5f;
+	public float glitchDuration = 10f;
+	public float rotateSpeed = 7f;
 	public LayerMask groundLayerMask;
 	public GameObject tRexPrefab;	
 	public GameObject otherDinosaur; 
@@ -26,7 +27,12 @@ public class PlayerController : MonoBehaviour {
 	private bool moveThroughWallsGlitch = false;
 	private bool hasBeenFound = false;
 	private bool gravityFlipped = false;
-	private string glitchType = "flipGravity";
+	private Quaternion newRotation;
+	private bool rotating = false;
+	private bool controlsFlipped = false;
+
+	// glitch types: moveThroughWalls, trex, cameraRotate, flipGravity, flipControls
+	private string glitchType = "moveThroughWalls";
 	private NetworkView networkView;
 	private GameObject tRex;
 		// for OnSerializeNetworkView
@@ -48,30 +54,67 @@ public class PlayerController : MonoBehaviour {
 			isGrounded = Physics2D.OverlapCircle (groundCheck.position, groundRadius, groundLayerMask);
 			if (isGrounded)
 				doubleJump = false;
-		
+			
 			float move = Input.GetAxis ("Horizontal");
-			rb.velocity = new Vector2 ((isGrounded ? move * maxSpeed : move * maxSpeed * 0.8f), rb.velocity.y);
+			if (!controlsFlipped)
+				rb.velocity = !gravityFlipped ? new Vector2 ((isGrounded ? move * maxSpeed : move * maxSpeed * 0.8f), rb.velocity.y) : new Vector2 ((isGrounded ? -move * maxSpeed : -move * maxSpeed * 0.8f), rb.velocity.y);
+			else
+				rb.velocity = new Vector2 ((isGrounded ? -move * maxSpeed : -move * maxSpeed * 0.8f), rb.velocity.y);
 
-			if (facingRight && move > 0)
-				Flip ();
-			else if (!facingRight && move < 0)
-				Flip ();
+			if (!controlsFlipped) {
+				if (facingRight && move > 0)
+					Flip ();
+				else if (!facingRight && move < 0)
+					Flip ();
+			}
+			else {
+				if (facingRight && move < 0)
+					Flip ();
+				else if (!facingRight && move > 0)
+					Flip ();
+			}
+
 		}
 	}
 	
 	void Update () {
+		if (rotating)
+			rotation ();
 		if (GetComponent<NetworkView> ().isMine) {
 			if (moveThroughWallsGlitch) {
 				float move = Input.GetAxis ("Vertical");
 				rb.velocity = new Vector2 (rb.velocity.x, move * maxSpeed);
-			} else if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
-				if (!isGrounded && !doubleJump)
-					doubleJump = true;
-				rb.velocity = new Vector2 (rb.velocity.x, Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));			
+			} else if (!controlsFlipped) {
+				if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.UpArrow)) {
+					if (!isGrounded && !doubleJump)
+						doubleJump = true;
+					rb.velocity = new Vector2 (rb.velocity.x, !gravityFlipped ? Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y) : -Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));			
+				}
+			} else if (controlsFlipped) {
+				if ((isGrounded || !doubleJump) && Input.GetKeyDown (KeyCode.DownArrow)) {
+					if (!isGrounded && !doubleJump)
+						doubleJump = true;
+					rb.velocity = new Vector2 (rb.velocity.x, Mathf.Sqrt (2f * jumpHeight * -Physics2D.gravity.y));
+				}
 			}
 		} else {
 			SyncedMovement ();
 		}
+	}
+
+	public void Rotate () {
+		Debug.Log ("Rotate called");
+		newRotation = !gravityFlipped ? Quaternion.Euler (new Vector3 (0, 0, 0)) : Quaternion.Euler (new Vector3 (0, 0, 180));
+		rotating = true;
+	}
+
+	void rotation() {
+		if (Mathf.Abs (transform.rotation.eulerAngles.z - newRotation.eulerAngles.z) < 10 * float.Epsilon) {
+			transform.rotation = newRotation;
+			rotating = false;
+		}
+		else
+			transform.rotation = Quaternion.Slerp (transform.rotation, newRotation, Time.deltaTime * rotateSpeed);		
 	}
 	
 	private void SyncedMovement () {
@@ -82,6 +125,7 @@ public class PlayerController : MonoBehaviour {
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) {
 		Vector3 syncPosition = Vector3.zero;
 		Vector3 syncScale = Vector3.zero;
+		Quaternion syncRotation = Quaternion.identity;
 		//Vector3 syncVelocity = Vector3.zero;
 		if (stream.isWriting) {
 			syncPosition = rb.position;
@@ -89,11 +133,15 @@ public class PlayerController : MonoBehaviour {
 
 			syncScale = transform.localScale;
 			stream.Serialize (ref syncScale);
+
+			syncRotation = transform.rotation;
+			stream.Serialize (ref syncRotation);
 			//syncVelocity = rb.velocity;
 			//stream.Serialize (ref syncVelocity);
 		} else {
 			stream.Serialize (ref syncPosition);
 			stream.Serialize (ref syncScale);
+			stream.Serialize (ref syncRotation);
 			//stream.Serialize (ref syncVelocity);
 
 			syncTime = 0f;
@@ -103,6 +151,7 @@ public class PlayerController : MonoBehaviour {
 			syncStartPosition = rb.position;
 			syncEndPosition = syncPosition;
 			transform.localScale = syncScale;
+			transform.rotation = syncRotation;
 		}
 	}
 
@@ -131,7 +180,6 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log ("TRex glitch triggered");
 			if (otherDinosaur != null)
 				Debug.Log ("Other Dinosaur exists");
-			glitchDuration = 10f;
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();
 			tRex = (GameObject)Network.Instantiate (tRexPrefab, new Vector3 (otherPlayer.isFacingRight () ? otherPlayer.transform.position.x - TRexController.spawnDistance : otherPlayer.transform.position.x + TRexController.spawnDistance, otherPlayer.transform.position.y, otherPlayer.transform.position.z), Quaternion.identity, 1);
 			tRex.GetComponent<TRexController> ().target = otherPlayer.transform;
@@ -141,6 +189,9 @@ public class PlayerController : MonoBehaviour {
 		} else if (glitchType == "flipGravity") {
 			gravityFlipped = true;
 			rb.gravityScale = -1;
+			Rotate ();
+		} else if (glitchType == "flipControls") {
+			controlsFlipped = true;
 		}
 		Debug.Log ("glitch active");
 		yield return new WaitForSeconds (glitchDuration);
@@ -148,7 +199,6 @@ public class PlayerController : MonoBehaviour {
 			moveThroughWallsGlitch = false;
 			Physics2D.IgnoreLayerCollision (LayerMask.NameToLayer ("Player"), LayerMask.NameToLayer ("BoardIgnoreCollisions"), false);
 		} else if (glitchType == "trex") {
-			glitchDuration = 5f;
 			Network.RemoveRPCs (networkView.viewID);
 			Network.Destroy (tRex);
 		} else if (glitchType == "cameraRotate") {
@@ -156,6 +206,9 @@ public class PlayerController : MonoBehaviour {
 		} else if (glitchType == "flipGravity") {
 			gravityFlipped = false;
 			rb.gravityScale = 1;
+			Rotate ();
+		} else if (glitchType == "flipControls") {
+			controlsFlipped = false;
 		}
 		glitchActive = false;
 		Debug.Log ("glitch deactivated");
