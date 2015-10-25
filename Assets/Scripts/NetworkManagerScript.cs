@@ -5,7 +5,8 @@ public class NetworkManagerScript : MonoBehaviour {
 
 	// public variables
 	public static NetworkManagerScript instance = null;
-	public GameObject playerPrefab;
+	public GameObject hostPlayerPrefab;
+	public GameObject clientPlayerPrefab;
 	public Transform hostSpawnPoint;
 	public Transform clientSpawnPoint;
 
@@ -75,10 +76,10 @@ public class NetworkManagerScript : MonoBehaviour {
 
 	private void SpawnPlayer (int spawnPointID) {
 		if (spawnPointID == 0) {
-			hostDinosaur = (GameObject) Network.Instantiate (playerPrefab, hostSpawnPoint.position, Quaternion.identity, 0);
+			hostDinosaur = (GameObject) Network.Instantiate (hostPlayerPrefab, hostSpawnPoint.position, Quaternion.identity, 0);
 		} else if (spawnPointID == 1) {
 			//networkSetupComplete = true;
-			clientDinosaur = (GameObject) Network.Instantiate (playerPrefab, clientSpawnPoint.position, Quaternion.identity, 0);
+			clientDinosaur = (GameObject) Network.Instantiate (clientPlayerPrefab, clientSpawnPoint.position, Quaternion.identity, 0);
 			//hostDinosaur.GetComponent<PlayerController>().otherDinosaur = clientDinosaur;
 			//clientDinosaur.GetComponent<PlayerController>().otherDinosaur = hostDinosaur;
 		}

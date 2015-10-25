@@ -122,6 +122,11 @@ public class PlayerController : MonoBehaviour {
 		Vector3 syncPosition = Vector3.zero;
 		Vector3 syncScale = Vector3.zero;
 		Quaternion syncRotation = Quaternion.identity;
+		int syncLeafCount = 0;
+		bool syncMoveThroughWallsGlitch = false;
+		bool syncGravityFlipped = false;
+		bool syncControlsFlipped = false;
+		bool syncGlitchActive = false;
 		//Vector3 syncVelocity = Vector3.zero;
 		if (stream.isWriting) {
 			syncPosition = rb.position;
@@ -132,12 +137,33 @@ public class PlayerController : MonoBehaviour {
 
 			syncRotation = transform.rotation;
 			stream.Serialize (ref syncRotation);
+
+			syncLeafCount = leafCount;
+			stream.Serialize (ref syncLeafCount);
+
+			syncMoveThroughWallsGlitch = moveThroughWallsGlitch;
+			stream.Serialize (ref syncMoveThroughWallsGlitch);
+
+			syncGravityFlipped = gravityFlipped;
+			stream.Serialize (ref syncGravityFlipped);
+
+			syncControlsFlipped = controlsFlipped;
+			stream.Serialize (ref syncControlsFlipped);
+
+			syncGlitchActive = glitchActive;
+			stream.Serialize (ref syncGlitchActive);
+
 			//syncVelocity = rb.velocity;
 			//stream.Serialize (ref syncVelocity);
 		} else {
 			stream.Serialize (ref syncPosition);
 			stream.Serialize (ref syncScale);
 			stream.Serialize (ref syncRotation);
+			stream.Serialize (ref syncLeafCount);
+			stream.Serialize (ref syncMoveThroughWallsGlitch);
+			stream.Serialize (ref syncGravityFlipped);
+			stream.Serialize (ref syncControlsFlipped);
+			stream.Serialize (ref syncGlitchActive);
 			//stream.Serialize (ref syncVelocity);
 
 			syncTime = 0f;
@@ -146,8 +172,14 @@ public class PlayerController : MonoBehaviour {
 
 			syncStartPosition = rb.position;
 			syncEndPosition = syncPosition;
+
 			transform.localScale = syncScale;
 			transform.rotation = syncRotation;
+			leafCount = syncLeafCount;
+			moveThroughWallsGlitch = syncMoveThroughWallsGlitch;
+			gravityFlipped = syncGravityFlipped;
+			controlsFlipped = syncControlsFlipped;
+			glitchActive = syncGlitchActive;
 		}
 	}
 

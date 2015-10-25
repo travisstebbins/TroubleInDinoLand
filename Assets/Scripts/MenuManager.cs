@@ -19,6 +19,8 @@ public class MenuManager : MonoBehaviour {
 
 	public void CreateGame () {
 		string gameName = gameNameField.GetComponent<InputField> ().text;
+		if (gameName == null)
+			gameName = "Trouble in Dinoland" + System.DateTime.UtcNow;
 		networkManager.CreateGame (gameName);
 		LoadLevel ("Main");
 	}
