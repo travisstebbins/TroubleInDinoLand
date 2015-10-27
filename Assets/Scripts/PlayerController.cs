@@ -330,7 +330,7 @@ public class PlayerController : MonoBehaviour {
 			otherPlayer.syncAnimationIsGlitched = false;
 			syncOtherAnimationIsGlitched = false;
 			Network.RemoveRPCs (GetComponent<NetworkView>().viewID);
-			Network.Destroy (tRex);
+			Network.Destroy (tRex.GetComponent<NetworkView>().gameObject);
 		} else if (glitchID == 2) {
 			//GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraRotate> ().Rotate ();
 			PlayerController otherPlayer = otherDinosaur.GetComponent<PlayerController> ();

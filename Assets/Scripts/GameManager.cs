@@ -77,9 +77,7 @@ public class GameManager : MonoBehaviour {
 		SetScore ();
 
 		if (endGame && Input.GetKeyDown (KeyCode.Return)) {
-			Time.timeScale = 1;
-			endGame = false;
-			Application.LoadLevel ("MainMenu");
+			Application.Quit ();
 		}
 	}
 
